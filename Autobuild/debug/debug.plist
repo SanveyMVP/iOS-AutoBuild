@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>identifier</key>
+	<string>xxx</string>
+	<key>version</key>
+	<string>xxx</string>
+	<key>p12</key>
+	<string>xxx</string>
+	<key>p12Password</key>
+	<string></string>
+	<key>mobileprovisionFile</key>
+	<string>xxx</string>
+	<key>appName</key>
+	<string>xxx</string>
+	<key>conf</key>
+	<string>Debug</string>
+	<key>plistInfo</key>
+	<string>xxx</string>
+	<key>bundleDisplayName</key>
+	<string>xxx</string>
+	<key>xcworkspace</key>
+	<string>xxx</string>
+	<key>scheme</key>
+	<string>xxx</string>
+</dict>
+</plist>
