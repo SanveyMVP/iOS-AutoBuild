@@ -1,6 +1,6 @@
 #!/bin.sh
-#getopts study
-#Created by 张旭东 1218
+#iOS-Autobuild
+#Created by 张旭东 151218
 ########################################################
 #定义一些变量
 
@@ -61,7 +61,6 @@ function getConfig () {
 #conf
     conf=$($PlistBuddy -c "Print :conf" $configFile)
     verificationVar $conf "," "conf"
-
 #xcworkspace
     xcworkspace=$($PlistBuddy -c "Print :xcworkspace" $configFile)
     verificationVar $xcworkspace "," "xcworkspace"
@@ -94,7 +93,8 @@ PROVISIONING_PROFILE=$mobileprovisionFile
     verificationFile $plistFile "," "plistInfo"
 #一些文件夹的设置
     initDir=$(pwd)
-    commitID=git rev-parse HEAD | awk '{print substr($1,1,6)}'
+    commitID=$(git rev-parse HEAD | awk '{print substr($1,1,8)}')
+    echo "${commitID}-----"
     ipaNamePre="${appName}_${version}_${commitID}"
     ipaNamePre=${ipaNamePre//./_}
     echo $ipaNamePre
@@ -129,8 +129,10 @@ function setConfig () {
     $PlistBuddy -c "Set :CFBundleShortVersionString $version" $plistFile
     $PlistBuddy -c "Set :CFBundleName ${bundleDisplayName}" $plistFile
     $PlistBuddy -c "Set :CFBundleIdentifier ${identifier}" $plistFile
-
-    security import $p12 -k ~/Library/Keychains/login.keychain -P "" -T /usr/bin/codesign
+    #创建钥匙链
+#unlock-keychain 如果你使用ssh 节点打包 请 代开下面这一行的注释 并且将password 改为你要使用电脑的登录密码
+#security unlock-keychain -p password login.keychain
+security import $p12 -k ~/Library/Keychains/login.keychain -P "" -T /usr/bin/codesign
     openssl smime -in ${PROVISIONING_PROFILE} -inform der -verify > profile || exit $?
     echo "证书导入成功"
 
@@ -149,13 +151,14 @@ function pkgAction () {
     find . -name "AppIcon*" -exec touch {} \;
     xcodebuild clean -configuration  $conf
     cd ${initDir}
-    xcodebuild -workspace $xcworkspace  -scheme  $scheme  -configuration $conf  -archivePath ${buildDir}/${ipaNamePre}.xcarchive archive -sdk iphoneos ${Profile_UUID} ${args} || exit $?
-    /usr/bin/xcrun -sdk iphoneos PackageApplication -v "${buildDir}/${ipaNamePre}.xcarchive/Products/Applications/${scheme}.app" -o "${ipapath}" ${args} || exit $?
-    cp -r ${buildDir}/${ipaNamePre}.xcarchive/dSYMs/ShouldWin.app.dSYM  ${DSYMBackupPath}
-    cp -r ${buildDir}/${ipaNamePre}.xcarchive/Products/Applications/ShouldWin.app ${appFilePath}
+xcodebuild -workspace $xcworkspace  -scheme  $scheme  -configuration $conf  -archivePath ${buildDir}/${ipaNamePre}.xcarchive archive -sdk iphoneos ${Profile_UUID} ${args} || exit $?
+/usr/bin/xcrun -sdk iphoneos PackageApplication -v "${buildDir}/${ipaNamePre}.xcarchive/Products/Applications/${scheme}.app" -o "${ipapath}" ${args} || exit $?
+cp -r ${buildDir}/${ipaNamePre}.xcarchive/dSYMs/ShouldWin.app.dSYM  ${DSYMBackupPath}
+cp -r ${buildDir}/${ipaNamePre}.xcarchive/Products/Applications/ShouldWin.app ${appFilePath}
+#cp -r ${ipapath} /Users/GJGroup/workCode/BuildSpace/yrdlc-iOS/${ipaNamePre}.ipa
 
 open ${ipaDir}
-echo SUCCESS!
+echo sucessful!
 }
 
 

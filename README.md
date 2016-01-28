@@ -22,6 +22,14 @@ debug.plist				debug.sh
 
 
 #使用方法
+**最新更新**
+**#unlock-keychain 如果你使用ssh 节点打包 请 打开**
+
+```
+#security unlock-keychain -p password login.keychain
+```
+**这一行的注释 并且将password 改为你要使用电脑的登录密码**
+
 使用方面重要的工作就是配置plist文件
 
 
